@@ -1,9 +1,11 @@
 ﻿using DTO_s.ViewResult;
 using DTOs.ChatDTOs;
+using LiveChatTask.Application.Contract;
 using LiveChatTask.Application.Services.WorldChat;
 using LiveChatTaskMVC.Application.Contract;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using NuGet.Protocol.Plugins;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,36 +13,45 @@ using System.Threading.Tasks;
 public class ChatHub : Hub
 {
     private readonly IChatService _chatService;
+    private readonly IUserRepository _userRepository;
+
     private static readonly ConcurrentDictionary<string, string> _connectedUsers = new ConcurrentDictionary<string, string>();
 
-    public ChatHub(IChatService chatService)
+    public ChatHub(IChatService chatService, IUserRepository userRepository)
     {
         _chatService = chatService;
+        _userRepository = userRepository;
     }
 
     public async Task SendMessage(string receiverId, string senderName, string message)
     {
         _chatService.SendMessage(receiverId, senderName, message);
+        string senderId =  _userRepository.GetUserByName(senderName).Id;
+
         await Clients.User(receiverId).SendAsync("ReceiveMessage", senderName, message);
-        await Clients.User(senderName).SendAsync("ReceiveMessage", senderName, message);
+        await Clients.User(senderId).SendAsync("ReceiveMessage", senderName, message);
 
     }
 
     public async Task SendFile(string receiverId, string senderName, string fileName, string base64FileContent, string contentType)
     {
+        string senderId = _userRepository.GetUserByName(senderName).Id;
+
         byte[] fileContent = Convert.FromBase64String(base64FileContent);
         _chatService.SendFile(receiverId, senderName, fileName, fileContent, contentType);
-        await Clients.User(receiverId).SendAsync("ReceiveFileMessage", senderName, fileName, base64FileContent, contentType);
-        await Clients.User(senderName).SendAsync("ReceiveFileMessage", senderName, fileName, base64FileContent, contentType);
-    } 
+        await Clients.User(receiverId).SendAsync("ReceiveFileMessage", senderName, fileName, fileContent, contentType);
+        await Clients.User(senderId).SendAsync("ReceiveFileMessage", senderName, fileName, fileContent, contentType);
+    }
 
     public async Task SendVoiceRecording(string receiverId, string senderName, string fileName, byte[] fileContent)
     {
-        _chatService.SendVoiceRecording(receiverId, senderName, fileName, fileContent);
-        await Clients.User(receiverId).SendAsync("ReceiveVoiceRecording", senderName, fileName);
-        await Clients.User(senderName).SendAsync("ReceiveVoiceRecording", senderName, fileName);
+        string senderId = _userRepository.GetUserByName(senderName).Id;
 
+        _chatService.SendVoiceRecording(receiverId, senderName, fileName, fileContent);
+        await Clients.User(receiverId).SendAsync("ReceiveVoiceRecording", senderName, fileName, fileContent);
+        await Clients.User(senderId).SendAsync("ReceiveVoiceRecording", senderName, fileName, fileContent);
     }
+
 
     public override async Task OnConnectedAsync()
     {

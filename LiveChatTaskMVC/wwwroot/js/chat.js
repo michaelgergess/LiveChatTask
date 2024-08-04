@@ -27,18 +27,22 @@ function sendData(methodName, ...args) {
 
 connection.on("ReceiveMessage", function (senderName, message) {
     console.log(`Received message from ${senderName}: ${message}`);
-    const chatBox = $("#chat-box");
-    chatBox.append(`<div><strong>${senderName}:</strong> ${message}</div>`);
+    $("#chat-box").append(`<div><strong>${senderName}:</strong> ${message}</div>`);
 });
-connection.on("ReceiveVoiceRecording", function (user, fileName) {
+connection.on("ReceiveVoiceRecording", function (user, fileName, fileContent) {
     const chatBox = $("#chat-box");
-    chatBox.append(`<div><strong>${user}:</strong> <audio controls src="/path/to/voice/${fileName}"></audio></div>`);
+    const blob = new Blob([new Uint8Array(fileContent)], { type: 'audio/wav' });
+    const url = URL.createObjectURL(blob);
+    chatBox.append(`<div><strong>${user}:</strong> <audio controls src="${url}"></audio></div>`);
 });
 
-connection.on("ReceiveFileMessage", function (user, fileName, contentType) {
+connection.on("ReceiveFileMessage", function (user, fileName, fileContent, contentType) {
     const chatBox = $("#chat-box");
-    chatBox.append(`<div><strong>${user}:</strong> <a href="/path/to/files/${fileName}" download>${fileName}</a></div>`);
+    const blob = new Blob([new Uint8Array(fileContent)], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    chatBox.append(`<div><strong>${user}:</strong> <a href="${url}" download="${fileName}">${fileName}</a></div>`);
 });
+
 
 
 function fetchContactUsers() {
