@@ -94,8 +94,6 @@ namespace LiveChatApp.Web.Controllers
             {
                 return View(userDto);
             }
-
-            return RedirectToAction("ChatPage"); // Redirect to the ChatPage
             }
 
         

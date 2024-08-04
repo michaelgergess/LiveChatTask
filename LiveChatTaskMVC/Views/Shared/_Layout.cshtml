@@ -32,22 +32,10 @@
                         <li class="nav-item ms-3">
                             <a class="btn btn-black btn-rounded" asp-action="logOut" asp-controller="Account" onclick="location.reload();">LogOut</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link mx-2" asp-action="ChatPage" asp-controller="Account"><i class="fas fa-heart pe-2"></i>Live Chat</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-2" asp-action="IndexUser" asp-controller="Article"><i class="fas fa-bell pe-2"></i>Browse  Articles</a>
-                        </li>
-                        if (User.IsInRole("admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link mx-2"  asp-action="GetAllUsers" asp-controller="Account"><i class="fas fa-plus-circle pe-2"></i>Managment Of Users</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" asp-action="Index" asp-controller="Article"><i class="fas fa-bell pe-2"></i>Managment Of Articles</a>
-                            </li>
-                            
-                        }
+                            <a class="nav-link mx-2" asp-action="Index" asp-controller="LiveChat"><i class="fas fa-bell pe-2"></i>Live Chat</a>
+                        </li>                
                     }
                     else
                     {

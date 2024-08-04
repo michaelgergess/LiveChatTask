@@ -1,17 +1,20 @@
 ﻿using LiveChatTask.Application.Services.WorldChat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LiveChatTaskMVC.Controllers
 {
+    [Authorize]
+
     public class LiveChatController : Controller
     {
-
         private readonly IChatService _chatService;
 
         public LiveChatController(IChatService chatService)
         {
             _chatService = chatService;
         }
+        
         public IActionResult Index()
         {
             return View();
