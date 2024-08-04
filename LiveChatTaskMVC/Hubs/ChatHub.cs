@@ -22,6 +22,8 @@ public class ChatHub : Hub
     {
         _chatService.SendMessage(receiverId, senderName, message);
         await Clients.User(receiverId).SendAsync("ReceiveMessage", senderName, message);
+        await Clients.User(senderName).SendAsync("ReceiveMessage", senderName, message);
+
     }
 
     public async Task SendFile(string receiverId, string senderName, string fileName, string base64FileContent, string contentType)
@@ -29,12 +31,15 @@ public class ChatHub : Hub
         byte[] fileContent = Convert.FromBase64String(base64FileContent);
         _chatService.SendFile(receiverId, senderName, fileName, fileContent, contentType);
         await Clients.User(receiverId).SendAsync("ReceiveFileMessage", senderName, fileName, base64FileContent, contentType);
-    }
+        await Clients.User(senderName).SendAsync("ReceiveFileMessage", senderName, fileName, base64FileContent, contentType);
+    } 
 
     public async Task SendVoiceRecording(string receiverId, string senderName, string fileName, byte[] fileContent)
     {
         _chatService.SendVoiceRecording(receiverId, senderName, fileName, fileContent);
         await Clients.User(receiverId).SendAsync("ReceiveVoiceRecording", senderName, fileName);
+        await Clients.User(senderName).SendAsync("ReceiveVoiceRecording", senderName, fileName);
+
     }
 
     public override async Task OnConnectedAsync()
@@ -55,6 +60,7 @@ public class ChatHub : Hub
         await NotifyUsersUpdate();
         await base.OnDisconnectedAsync(exception);
     }
+    
     public async Task<ResultDataList<ChatItem>> GetMessages(string senderName, string receiverName)
     {
         var chatHistory = await _chatService.GetMessages(senderName, receiverName);

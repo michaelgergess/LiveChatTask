@@ -95,27 +95,14 @@ namespace LiveChatTask.Application.Services.WorldChat
             AppUser sender = _userRepository.GetUserByName(senderName);
             AppUser receiver = _userRepository.GetUserByName(receiverName);
 
-            // Check if the sender or receiver is null and handle accordingly
-            if (sender == null)
-            {
-                throw new ArgumentException($"Sender with name {senderName} not found.");
-            }
-            if (receiver == null)
-            {
-                throw new ArgumentException($"Receiver with name {receiverName} not found.");
-            }
-
-            // Fetch the chat items between the sender and receiver
             var chatItems = await _messageRepository.GetMessagesBy(receiver.Id, sender.Id);
 
-            // Check if chat items exist and return them
             if (chatItems.Any())
             {
                 var chatItemsList = chatItems.ToList();
                 return new ResultDataList<ChatItem> { Entities = chatItemsList, Count = chatItemsList.Count };
             }
 
-            // Return an empty result if no chat items are found
             return new ResultDataList<ChatItem> { Entities = new List<ChatItem>(), Count = 0 };
         }
 

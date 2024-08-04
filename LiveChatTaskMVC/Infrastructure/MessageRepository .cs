@@ -17,28 +17,37 @@ namespace LiveChatTaskMVC.Infrastructure
 
         public async Task<IEnumerable<ChatItem>> GetMessagesBy(string receiverId, string senderId)
         {
+            // Fetch user names for sender and receiver
+            var sender = await _context.Users.FindAsync(senderId);
+            var receiver = await _context.Users.FindAsync(receiverId);
+
+
+            string senderName = sender.UserName;
+            string receiverName = receiver.UserName;
+
             // Fetch messages from the database
             var messages = await _context.Messages
-                .Where(m => m.ReciverId == receiverId && m.SenderId == senderId)
+                .Where(m => (m.ReciverId == receiverId && m.SenderId == senderId) || (m.ReciverId == senderId && m.SenderId == receiverId))
                 .Select(m => new ChatItem
                 {
                     IsMessage = true,
-                    SenderId = m.SenderId,
-                    ReceiverId = m.ReciverId,
+                    SenderName = m.SenderId == senderId ? senderName : receiverName,
+                    ReceiverName = m.ReciverId == receiverId ? receiverName : senderName,
                     Content = m.Content,
                     SentAt = m.SentAt
                 }).ToListAsync();
 
             // Fetch file attachments from the database
             var files = await _context.FileAttachments
-                .Where(f => f.ReciverId == receiverId && f.SenderId == senderId)
+                .Where(f => (f.ReciverId == receiverId && f.SenderId == senderId) || (f.ReciverId == senderId && f.SenderId == receiverId))
                 .Select(f => new ChatItem
                 {
                     IsMessage = false,
-                    SenderId = f.SenderId,
-                    ReceiverId = f.ReciverId,
+                    SenderName = f.SenderId == senderId ? senderName : receiverName,
+                    ReceiverName = f.ReciverId == receiverId ? receiverName : senderName,
                     FileName = f.FileName,
                     ContentType = f.ContentType,
+                    FileContent = f.FileContent, // Assuming this property is Base64 encoded
                     SentAt = f.SentAt
                 }).ToListAsync();
 
@@ -49,6 +58,7 @@ namespace LiveChatTaskMVC.Infrastructure
 
             return chatItems;
         }
+
 
         public Message GetMessageById(int id)
         {
