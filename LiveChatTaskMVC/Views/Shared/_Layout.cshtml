@@ -1,0 +1,99 @@
+﻿﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UserPresentation</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/UserPresentation.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top bg-light navbar-light">
+
+            <h6 class="nav-item ms-3">
+                LiveChat
+            </h6>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+              
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                    
+                    @if (User.Identity.IsAuthenticated )
+                    {
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-black btn-rounded" asp-action="logOut" asp-controller="Account" onclick="location.reload();">LogOut</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-2" asp-action="ChatPage" asp-controller="Account"><i class="fas fa-heart pe-2"></i>Live Chat</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-2" asp-action="IndexUser" asp-controller="Article"><i class="fas fa-bell pe-2"></i>Browse  Articles</a>
+                        </li>
+                        if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link mx-2"  asp-action="GetAllUsers" asp-controller="Account"><i class="fas fa-plus-circle pe-2"></i>Managment Of Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-2" asp-action="Index" asp-controller="Article"><i class="fas fa-bell pe-2"></i>Managment Of Articles</a>
+                            </li>
+                            
+                        }
+                    }
+                    else
+                    {
+                      
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-black btn-rounded" asp-action="Login" asp-controller="Account">Sign in</a>
+                        </li>
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-black btn-rounded" asp-action="Register" asp-controller="Account">Register</a>
+                        </li>
+                    }
+                </ul>
+                </div>
+            
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+            <div class="text-white mb-3 mb-md-0">
+                Copyright © 2024 .
+            </div>
+            <div>
+                <a href="#!" class="text-white me-4">   
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#!" class="text-white me-4">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#!" class="text-white me-4">
+                    <i class="fab fa-google"></i>
+                </a>
+                <a href="#!" class="text-white">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>

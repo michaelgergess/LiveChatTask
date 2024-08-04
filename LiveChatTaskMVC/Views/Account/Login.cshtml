@@ -1,0 +1,77 @@
+﻿@model DTOs.UserDTOs.UserLoginDTO
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles */
+        .divider:before,
+        .divider:after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+
+        .h-custom {
+            height: calc(100vh - 73px); /* Adjusted for the header height */
+        }
+    </style>
+</head>
+<body>
+
+    <section class="vh-100">
+        <div class="container-fluid h-custom">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-9 col-lg-6 col-xl-5">
+                    <img src="~/img/logo1.png" class="img-fluid"
+                         alt="Sample image">
+                </div>
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <form asp-action="Login" method="post">
+                        <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start mb-4">
+                            <h2 class="fw-normal">Sign in</h2>
+                        </div>
+                        <!-- Display validation summary -->
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <input asp-for="Email" class="form-control form-control-lg" required>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <label class="form-label" for="Email">Email address</label>
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-3">
+                            <input asp-for="password" type="password" class="form-control form-control-lg" required>
+                            <span asp-validation-for="password" class="text-danger"></span>
+                            <label class="form-label" for="password">Password</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <a href="#!" class="text-body">Forgot password?</a>
+                        </div>
+
+                        <div class="text-center text-lg-start">
+                            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+                            <p class="small fw-bold mt-3">Don't have an account? <a href="/Account/Register" class="link-danger">Register</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

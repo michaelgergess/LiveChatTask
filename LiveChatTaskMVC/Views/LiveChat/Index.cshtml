@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" type="text/css" href="~/css/chat.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="active-users" class="user-section">
+            <h3>Active Users</h3>
+            <ul id="activeUserList"></ul>
+        </div>
+
+        <div id="contact-users" class="user-section">
+            <h3>Contact Users</h3>
+            <ul id="contactUserList"></ul>
+        </div>
+
+        <div id="chat">
+            <div id="chat-box"></div>
+            <div id="message-input-area">
+                <input type="text" id="messageInput" placeholder="Enter your message">
+                <input type="hidden" id="SenderName" value="@User.Identity.Name">
+                <button id="openUserSelectionModalButtonMessage" data-context="message">Select Users & Send Message</button>
+            </div>
+            <div id="voice-controls">
+                <button id="startRecordingButton">Start Recording</button>
+                <button id="stopRecordingButton" disabled>Stop Recording</button>
+                <audio id="recordedAudio" controls></audio>
+                <button id="openUserSelectionModalButtonVoice" data-context="voice" disabled>Select Users & Send Voice</button>
+            </div>
+            <form id="fileForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file">
+                <button id="openUserSelectionModalButtonFile" data-context="file" type="button">Select Users & Send File</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for user selection -->
+    <div id="userSelectionModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Select Users</h3>
+            <ul id="userSelectionList"></ul>
+            <button id="sendDataButton">Send</button>
+        </div>
+    </div>
+
+    <script src="~/js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "ChatPage";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/chat.css" />
+  
+</head>
+<body>
+
+    <div class="container">
+        <div class="chat-container">
+            <h1 class="text-center">Chat</h1>
+            <ul id="Conv" class="chat-messages" style="height: 300px; overflow-y: auto;">
+            </ul>
+            <div class="input-group">
+                <input type="text" class="form-control" id="Msg" placeholder="Type a message...">
+                <div class="input-group-append">
+                    <button id="sendBtn" class="btn btn-primary" onclick="SendData()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"
+            integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/chat.js"></script>
+    <script>
+        function SendData() {
+            var msg = $("#Msg").val().trim(); 
+            if (msg !== "") {
+                var name = "@User.Identity.Name"; 
+
+                hubCon.invoke("SendNewMessage", msg, name);
+
+                $("#Msg").val("");
+            }
+        }
+
+      </script>
+</body>
+</html>
+    
